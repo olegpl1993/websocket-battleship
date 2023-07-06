@@ -1,5 +1,10 @@
 import WebSocket from 'ws';
-import { LoginData } from './types';
+import { ClientMessage } from './types';
+import { reg } from './reg';
+
+const router = {
+  reg,
+};
 
 export const server = new WebSocket.Server({ port: 3000 });
 
@@ -8,12 +13,11 @@ server.on('connection', (socket) => {
 
   socket.on('message', (message) => {
     const messageString = message.toString(); // Преобразование буфера в строку
-    const messageObject = JSON.parse(messageString); // Распарсивание строки как JSON
-    console.log('Received message:', messageObject);
-    const parsedData: LoginData = JSON.parse(messageObject.data);
-    console.log(parsedData);
-
-    socket.send('Received your message');
+    const messageObject: ClientMessage = JSON.parse(messageString);
+    const action = router[messageObject.type];
+    const response = action(messageObject);
+    // Отправка сообщения
+    socket.send(JSON.stringify(response));
   });
 
   socket.on('close', () => {
