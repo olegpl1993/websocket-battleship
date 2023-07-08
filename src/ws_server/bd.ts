@@ -1,10 +1,9 @@
-import { OpenRoom, UserData, WaitingUser } from './types';
+import { User, UserData } from './types';
 
-export const users: UserData[] = [
-  { name: 'test1', password: '12345' },
-  { name: 'test2', password: '12345' },
-];
+export const users: UserData[] = [];
 
-export const openRooms: OpenRoom[] = [];
+export const openRoomUsers: User[] = [];
 
-export const waitingUsers: WaitingUser[] = [];
+export const waitingUsers: User[] = [];
+
+export const gameRooms: User[][] = [];

@@ -1,4 +1,4 @@
-import { openRooms, waitingUsers } from './bd';
+import { openRoomUsers, waitingUsers } from './bd';
 import { ClientServerMessage } from './types';
 import { WebSocket } from 'ws';
 import { update_room } from './update_room';
@@ -17,7 +17,7 @@ export const create_room = (
     // );
 
     // Добавляем открыую комнату
-    openRooms.push({
+    openRoomUsers.push({
       name: currentUser.name,
       socket,
     });

@@ -11,12 +11,7 @@ export interface ClientServerMessage {
   id: 0;
 }
 
-export interface OpenRoom {
-  name: string;
-  socket: WebSocket;
-}
-
-export interface WaitingUser {
+export interface User {
   name: string;
   socket: WebSocket;
 }
@@ -29,4 +24,8 @@ export interface OpenRoomList {
       index: number;
     },
   ];
+}
+
+export interface AddUserToRoomData {
+  indexRoom: number;
 }

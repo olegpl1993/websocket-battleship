@@ -1,10 +1,10 @@
-import { openRooms, users, waitingUsers } from './bd';
+import { openRoomUsers, users, waitingUsers } from './bd';
 import { OpenRoomList } from './types';
 
 export const update_room = () => {
   // формируем список открытых комнат
   const openRoomsList: OpenRoomList[] = [];
-  openRooms.forEach((room, index) => {
+  openRoomUsers.forEach((room, index) => {
     openRoomsList.push({
       roomId: index,
       roomUsers: [
