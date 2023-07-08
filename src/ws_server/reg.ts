@@ -11,7 +11,6 @@ export const reg = (ClientMessage: ClientServerMessage, socket: WebSocket) => {
 
   if (userExists && isCorrectPassword) {
     // Если пользователь существует и пароль совпадает
-    console.log(1);
     socket.send(
       JSON.stringify({
         type: 'reg',
@@ -26,7 +25,6 @@ export const reg = (ClientMessage: ClientServerMessage, socket: WebSocket) => {
     );
   } else if (userExists && !isCorrectPassword) {
     // Если пользователь существует и пароль не совпадает
-    console.log(2);
     socket.send(
       JSON.stringify({
         type: 'reg',
@@ -41,7 +39,6 @@ export const reg = (ClientMessage: ClientServerMessage, socket: WebSocket) => {
     );
   } else {
     // Если пользователь не существует
-    console.log(3);
     users.push(data); // Добавляем нового пользователя
     const newIndex = users.length - 1; // Индекс добавленного пользователя
     socket.send(

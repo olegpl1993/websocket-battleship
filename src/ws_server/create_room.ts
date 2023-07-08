@@ -10,14 +10,16 @@ export const create_room = (
     index: 0,
   };
 
-  const roomStr = JSON.stringify({
-    roomId: 0,
-    roomUsers: [roomUser],
-  });
+  const dataStr = JSON.stringify([
+    {
+      roomId: 0,
+      roomUsers: [roomUser],
+    },
+  ]);
 
   const response = JSON.stringify({
     type: 'update_room',
-    data: [roomStr],
+    data: dataStr,
     id: 0,
   });
 
