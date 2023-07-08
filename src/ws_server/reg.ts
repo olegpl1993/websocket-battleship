@@ -1,7 +1,8 @@
 import { users } from './users';
 import { ClientServerMessage, UserData } from './types';
+import { WebSocket } from 'ws';
 
-export const reg = (ClientMessage: ClientServerMessage) => {
+export const reg = (ClientMessage: ClientServerMessage, socket: WebSocket) => {
   const data: UserData = JSON.parse(ClientMessage.data);
 
   const userExists = users.find((user) => user.name === data.name); // Проверка существования
@@ -10,34 +11,49 @@ export const reg = (ClientMessage: ClientServerMessage) => {
 
   // Если пользователь существует и пароль совпадает
   if (userExists && isCorrectPassword) {
-    const responseData = {
-      name: data.name,
-      index,
-      error: false,
-      errorText: '',
-    };
-    return responseData;
+    socket.send(
+      JSON.stringify({
+        type: 'reg',
+        data: JSON.stringify({
+          name: data.name,
+          index,
+          error: false,
+          errorText: '',
+        }),
+        id: 0,
+      }),
+    ); // Отправка ответа
   }
 
   // Если пользователь существует и пароль не совпадает
   if (userExists && !isCorrectPassword) {
-    const responseData = {
-      name: data.name,
-      index,
-      error: true,
-      errorText: 'Invalid password',
-    };
-    return responseData;
+    socket.send(
+      JSON.stringify({
+        type: 'reg',
+        data: JSON.stringify({
+          name: data.name,
+          index,
+          error: true,
+          errorText: 'Invalid password',
+        }),
+        id: 0,
+      }),
+    ); // Отправка ответа
   }
 
   // Если пользователь не существует
   users.push(data); // Добавляем нового пользователя
   const newIndex = users.length - 1; // Индекс добавленного пользователя
-  const responseData = {
-    name: data.name,
-    index: newIndex,
-    error: false,
-    errorText: '',
-  };
-  return responseData;
+  socket.send(
+    JSON.stringify({
+      type: 'reg',
+      data: JSON.stringify({
+        name: data.name,
+        index: newIndex,
+        error: false,
+        errorText: '',
+      }),
+      id: 0,
+    }),
+  ); // Отправка ответа
 };

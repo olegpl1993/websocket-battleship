@@ -8,10 +8,3 @@ export interface ClientServerMessage {
   data: string;
   id: 0;
 }
-
-export interface RedistrationData {
-  name: string;
-  index: number;
-  error: boolean;
-  errorText: string;
-}

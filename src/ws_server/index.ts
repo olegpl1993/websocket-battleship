@@ -1,9 +1,11 @@
 import WebSocket from 'ws';
 import { ClientServerMessage } from './types';
 import { reg } from './reg';
+import { create_room } from './create_room';
 
 const actionList = {
   reg,
+  create_room,
 };
 
 export const server = new WebSocket.Server({ port: 3000 });
@@ -15,16 +17,7 @@ server.on('connection', (socket) => {
     const requestString = request.toString(); // Преобразование буфера в строку
     const ClientMessage: ClientServerMessage = JSON.parse(requestString); // Преобразование строки в объект
     const action = actionList[ClientMessage.type]; // Выбор действия
-    const dataObj = action(ClientMessage); // data для ответа
-    const data = JSON.stringify(dataObj); // data в строку
-    // ответ для клиента
-    const ServerMessage: ClientServerMessage = {
-      type: ClientMessage.type,
-      data,
-      id: 0,
-    };
-    const response = JSON.stringify(ServerMessage); // ответ в строку
-    socket.send(response); // Отправка ответа
+    action(ClientMessage, socket); // Вызов действия
   });
 
   socket.on('close', () => {
