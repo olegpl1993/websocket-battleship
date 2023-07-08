@@ -1,8 +1,8 @@
 import WebSocket from 'ws';
-import { ClientMessage } from './types';
+import { ClientServerMessage } from './types';
 import { reg } from './reg';
 
-const router = {
+const actionList = {
   reg,
 };
 
@@ -13,11 +13,18 @@ server.on('connection', (socket) => {
 
   socket.on('message', (message) => {
     const messageString = message.toString(); // Преобразование буфера в строку
-    const messageObject: ClientMessage = JSON.parse(messageString);
-    const action = router[messageObject.type];
-    const response = action(messageObject);
-    // Отправка сообщения
-    socket.send(JSON.stringify(response));
+    const messageObject: ClientServerMessage = JSON.parse(messageString); // Преобразование строки в объект
+    const action = actionList[messageObject.type]; // Выбор действия
+    const dataObj = action(messageObject); // Вызов действия создающего обьект дата
+    const data = JSON.stringify(dataObj); // Преобразование обьекта дата в строку
+    // сообщение с ответом для клиента
+    const response: ClientServerMessage = {
+      type: messageObject.type,
+      data,
+      id: 0,
+    };
+    const stringResponse = JSON.stringify(response); // Преобразование ответа в строку
+    socket.send(stringResponse); // Отправка ответа
   });
 
   socket.on('close', () => {

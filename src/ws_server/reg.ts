@@ -1,40 +1,43 @@
 import { users } from './users';
-import { ClientMessage, ServerRegistration, UserData } from './types';
+import { ClientServerMessage, UserData } from './types';
 
-export const reg = (messageObject: ClientMessage) => {
+export const reg = (messageObject: ClientServerMessage) => {
   const userData: UserData = JSON.parse(messageObject.data);
 
-  // Проверка на существование пользователя
-  const userExists = users.find((user) => user.name === userData.name);
-  const isCorrectPassword = userExists?.password === userData.password;
+  const userExists = users.find((user) => user.name === userData.name); // Проверка существования
+  const isCorrectPassword = userExists?.password === userData.password; // Проверка пароля
+  const index = users.findIndex((user) => user.name === userData.name); // Индекс пользователя
 
-  // если пользователь существует и пароль совпадает
+  // Если пользователь существует и пароль совпадает
   if (userExists && isCorrectPassword) {
-    console.log(userData, 'User exists');
-    const response: ServerRegistration = {
-      type: 'reg',
-      data: {
-        name: userData.name,
-        index: 1,
-        error: false,
-        errorText: '',
-      },
-      id: 0,
-    };
-    return response;
-  }
-
-  users.push(userData);
-  console.log(userData, 'User added');
-  const response: ServerRegistration = {
-    type: 'reg',
-    data: {
+    const objData = {
       name: userData.name,
-      index: 1,
+      index,
       error: false,
       errorText: '',
-    },
-    id: 0,
+    };
+    return objData;
+  }
+
+  // Если пользователь существует и пароль не совпадает
+  if (userExists && !isCorrectPassword) {
+    const objData = {
+      name: userData.name,
+      index,
+      error: true,
+      errorText: 'Invalid password',
+    };
+    return objData;
+  }
+
+  // Если пользователь не существует
+  users.push(userData); // Добавляем нового пользователя
+  const newIndex = users.length - 1; // Индекс добавленного пользователя
+  const objData = {
+    name: userData.name,
+    index: newIndex,
+    error: false,
+    errorText: '',
   };
-  return response;
+  return objData;
 };
