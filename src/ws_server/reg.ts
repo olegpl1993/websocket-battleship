@@ -9,8 +9,9 @@ export const reg = (ClientMessage: ClientServerMessage, socket: WebSocket) => {
   const isCorrectPassword = userExists?.password === data.password; // Проверка пароля
   const index = users.findIndex((user) => user.name === data.name); // Индекс пользователя
 
-  // Если пользователь существует и пароль совпадает
   if (userExists && isCorrectPassword) {
+    // Если пользователь существует и пароль совпадает
+    console.log(1);
     socket.send(
       JSON.stringify({
         type: 'reg',
@@ -22,11 +23,10 @@ export const reg = (ClientMessage: ClientServerMessage, socket: WebSocket) => {
         }),
         id: 0,
       }),
-    ); // Отправка ответа
-  }
-
-  // Если пользователь существует и пароль не совпадает
-  if (userExists && !isCorrectPassword) {
+    );
+  } else if (userExists && !isCorrectPassword) {
+    // Если пользователь существует и пароль не совпадает
+    console.log(2);
     socket.send(
       JSON.stringify({
         type: 'reg',
@@ -38,22 +38,23 @@ export const reg = (ClientMessage: ClientServerMessage, socket: WebSocket) => {
         }),
         id: 0,
       }),
-    ); // Отправка ответа
-  }
-
-  // Если пользователь не существует
-  users.push(data); // Добавляем нового пользователя
-  const newIndex = users.length - 1; // Индекс добавленного пользователя
-  socket.send(
-    JSON.stringify({
-      type: 'reg',
-      data: JSON.stringify({
-        name: data.name,
-        index: newIndex,
-        error: false,
-        errorText: '',
+    );
+  } else {
+    // Если пользователь не существует
+    console.log(3);
+    users.push(data); // Добавляем нового пользователя
+    const newIndex = users.length - 1; // Индекс добавленного пользователя
+    socket.send(
+      JSON.stringify({
+        type: 'reg',
+        data: JSON.stringify({
+          name: data.name,
+          index: newIndex,
+          error: false,
+          errorText: '',
+        }),
+        id: 0,
       }),
-      id: 0,
-    }),
-  ); // Отправка ответа
+    );
+  }
 };
