@@ -1,27 +1,27 @@
+import { openRooms, waitingUsers } from './bd';
 import { ClientServerMessage } from './types';
 import { WebSocket } from 'ws';
+import { update_room } from './update_room';
 
 export const create_room = (
-  ClientMessage: ClientServerMessage,
+  clientMessage: ClientServerMessage,
   socket: WebSocket,
 ) => {
-  const roomUser = {
-    name: 'test1',
-    index: 0,
-  };
+  const currentUser = waitingUsers.find((user) => user.socket === socket);
 
-  const dataStr = JSON.stringify([
-    {
-      roomId: 0,
-      roomUsers: [roomUser],
-    },
-  ]);
+  if (currentUser) {
+    // Удаляем пользователя из списка ожидающих
+    // waitingUsers.splice(
+    //   waitingUsers.findIndex((user) => user.name === currentUser.name),
+    //   1,
+    // );
 
-  const response = JSON.stringify({
-    type: 'update_room',
-    data: dataStr,
-    id: 0,
-  });
+    // Добавляем открыую комнату
+    openRooms.push({
+      name: currentUser.name,
+      socket,
+    });
+  }
 
-  socket.send(response);
+  update_room(); // Отправляем список комнат всем в списке ожидающих
 };

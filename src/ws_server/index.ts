@@ -15,9 +15,9 @@ server.on('connection', (socket) => {
 
   socket.on('message', (request) => {
     const requestString = request.toString(); // Преобразование буфера в строку
-    const ClientMessage: ClientServerMessage = JSON.parse(requestString); // Преобразование строки в объект
-    const action = actionList[ClientMessage.type]; // Выбор действия
-    action(ClientMessage, socket); // Вызов действия
+    const clientMessage: ClientServerMessage = JSON.parse(requestString); // Преобразование строки в объект
+    const action = actionList[clientMessage.type]; // Выбор действия
+    action(clientMessage, socket); // Вызов действия
   });
 
   socket.on('close', () => {
